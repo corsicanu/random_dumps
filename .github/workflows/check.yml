@@ -1,0 +1,139 @@
+name: Check firmware update
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  push:
+
+jobs:
+  update:
+    runs-on: ubuntu-20.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - model: "SM-T835"
+            region: "DBT"
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Compare latest version with current version
+        id: check
+        run: |
+          need_update=0
+          latest=`curl --retry 5 --retry-delay 5 http://fota-cloud-dn.ospserver.net/firmware/${{ matrix.region }}/${{ matrix.model }}/version.xml | grep latest | sed 's/^[^>]*>//' | sed 's/<.*//'`
+          latest_short=`echo $latest | cut -d'/' -f1`
+          current=`cat current.${{ matrix.model }}` || need_update=1
+          [[ $latest != $current ]] && need_update=1
+          echo ::set-output name=latest_version::$latest
+          echo ::set-output name=latest_shortversion::$latest_short
+          echo ::set-output name=need_update::$need_update
+
+      - name: Use Node.js 15
+        if: steps.check.outputs.need_update == 1
+        uses: actions/setup-node@v1
+        with:
+          node-version: 15
+
+      - name: Install dependencies
+        if: steps.check.outputs.need_update == 1
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y liblz4-tool zip simg2img
+          sudo npm i -g samfirm
+          sudo wget -O /usr/bin/lpunpack https://treble.phh.me/lpunpack && sudo chmod +x /usr/bin/lpunpack
+          
+
+      - name: Fetch firmware
+        if: steps.check.outputs.need_update == 1
+        run: samfirm -m ${{ matrix.model }} -r ${{ matrix.region }}
+
+      - name: Print directory structure
+        if: steps.check.outputs.need_update == 1
+        run: ls -la ${{ matrix.model }}_${{ matrix.region }}
+
+      - name: Get path of files
+        if: steps.check.outputs.need_update == 1
+        id: files
+        run: |
+          echo ::set-output name=ap::`find -name AP*`
+
+      - name: Check downloaded firmware version
+        if: steps.check.outputs.need_update == 1
+        run: |
+          version_short=`echo ${{ steps.files.outputs.ap }} | cut -d'_' -f3`
+          changelist=`echo ${{ steps.files.outputs.ap }} | cut -d'_' -f4`
+          echo PDA version: $version_short > versions.txt
+          echo Changelist: $changelist >> versions.txt
+
+      - name: Print available disk space
+        if: steps.check.outputs.need_update == 1
+        run: |
+          pwd
+          sudo df -h
+          
+      - name: Extract images from AP and create zip
+        if: steps.check.outputs.need_update == 1
+        id: releases
+        run: |
+          target_version=${{ steps.check.outputs.latest_shortversion }}
+          basedir=$(pwd)
+          releasedir=$basedir/$target_version
+          mkdir -p $releasedir
+          parts=(super system vendor)
+          for i in ${parts[@]}; do [[ `tar tvf ${{ steps.files.outputs.ap }} | grep $i` ]] && tar xvf ${{ steps.files.outputs.ap }} $(echo `tar tvf ${{ steps.files.outputs.ap }} | grep $i | awk -F " " '{print $NF}'`); done
+          rm -rf *.tar.md5
+          for i in `ls | grep lz4`; do lz4 -dm $i ; rm -rf $i; done
+          for i in `ls | grep img`; do simg2img $i raw_$i ; rm -rf $i; mv raw_$i $i; done
+          [[ -e super.img ]] && lpunpack --partition=vendor --partition=system super.img
+          [[ -e system.img.ext4 ]] && mv system.img.ext4 system.img
+          [[ -e vendor.img.ext4 ]] && mv vendor.img.ext4 vendor.img
+          [[ -e system.img ]] && sudo mkdir -p system && sudo mount -o loop,rw,sync system.img system && sudo find system -type l -ls | awk '{print $11" "$12" "$13}' | sort > $releasedir/symlinks_system.txt && for i in `sudo find system -not -type l`;do echo -n $(stat -c '%n %C' "$i");if [ -d "$i" ];then echo -n " dir ";else echo -n " file ";fi; echo ""; done | sort > $releasedir/metadata_system.txt && sudo find system -type d -exec sudo chmod 0755 {} \; && sudo find system -type f -exec sudo chmod 0644 {} \;
+          [[ -e vendor.img ]] && sudo mkdir -p vendor && sudo mount -o loop,rw,sync vendor.img vendor && sudo find vendor -type l -ls | awk '{print $11" "$12" "$13}' | sort > $releasedir/symlinks_vendor.txt && for i in `sudo find vendor -not -type l`;do echo -n $(stat -c '%n %C' "$i");if [ -d "$i" ];then echo -n " dir ";else echo -n " file ";fi; echo ""; done | sort > $releasedir/metadata_vendor.txt && sudo find vendor -type d -exec sudo chmod 0755 {} \; && sudo find vendor -type f -exec sudo chmod 0644 {} \;
+          misc=(SamsungCamera.apk SecSettings.apk SystemUI.apk framework.jar services.jar wifi-service.jar telephony-common.jar build.prop)
+          for i in ${misc[@]}; do cat `find system -name $i` > $releasedir/$i; done
+          [[ -s system/system/build.prop ]] && cd system/system && zip -r $releasedir/$target_version-lib.zip lib* && zip -r $releasedir/$target_version-etc.zip etc && zip -r $releasedir/$target_version-cameradata.zip cameradata && cd $basedir || cd system && zip -r $releasedir/$target_version-lib.zip lib* && zip -r $releasedir/$target_version-etc.zip etc && zip -r $releasedir/$target_version-cameradata.zip cameradata && cd $basedir
+          if [[ -d vendor ]]; then cd vendor; zip -r $releasedir/$target_version-vendor.zip *; cd $basedir; else cd system/vendor; zip -r $releasedir/$target_version-vendor.zip *; cd $basedir;fi
+          cd $releasedir && zip -r $target_version-app_frame.zip *apk *jar && zip -r $target_version-txt.zip *.txt *.prop && cd $basedir
+          sudo umount system && sudo umount vendor && rm -rf *img
+          echo ::set-output name=folder::$releasedir
+
+      - name: Update current version
+        if: steps.check.outputs.need_update == 1
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git pull origin ${{github.ref}} --ff-only
+          echo ${{ steps.check.outputs.latest_version }} > current.${{ matrix.model }}
+          git add current.${{ matrix.model }}
+          git commit -m "${{ matrix.model }}: ${{ steps.check.outputs.latest_version }}"
+          git tag ${{ steps.check.outputs.latest_shortversion }}
+
+      - name: Push changes to repo
+        if: steps.check.outputs.need_update == 1
+        uses: ad-m/github-push-action@master
+        with:
+          tags: true
+          github_token: ${{ secrets.TOKEN }}
+
+      - name: Upload release assets
+        if: steps.check.outputs.need_update == 1
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          body_path: versions.txt
+          tag_name: ${{ steps.check.outputs.latest_shortversion }}
+          files: |
+            ${{ steps.releases.outputs.folder }}/${{ steps.check.outputs.latest_shortversion }}-etc.zip
+            ${{ steps.releases.outputs.folder }}/${{ steps.check.outputs.latest_shortversion }}-lib.zip
+            ${{ steps.releases.outputs.folder }}/${{ steps.check.outputs.latest_shortversion }}-txt.zip
+            ${{ steps.releases.outputs.folder }}/${{ steps.check.outputs.latest_shortversion }}-app_frame.zip
+            ${{ steps.releases.outputs.folder }}/${{ steps.check.outputs.latest_shortversion }}-cameradata.zip
+            ${{ steps.releases.outputs.folder }}/${{ steps.check.outputs.latest_shortversion }}-vendor.zip
+
