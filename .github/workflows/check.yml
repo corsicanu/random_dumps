@@ -15,6 +15,20 @@ jobs:
         include:
           - model: "SM-T835"
             region: "DBT"
+          - model: "SM-N975F"
+            region: "DBT"
+          - model: "SM-G960F"
+            region: "DBT"
+          - model: "SM-J720F"
+            region: "XSG"
+          - model: "SM-M205FN"
+            region: "DBT"
+          - model: "SM-A405FN"
+            region: "DBT"
+          - model: "SM-A305F"
+            region: "XSG"
+          - model: "SM-M305F"
+            region: "INS"
 
     steps:
       - name: Checkout repo
