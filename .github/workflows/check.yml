@@ -29,6 +29,14 @@ jobs:
             region: "XSG"
           - model: "SM-M305F"
             region: "INS"
+          - model: "SM-N950F"
+            region: "KSA"
+          - model: "SM-G950F"
+            region: "TUR"
+          - model: "SM-G955F"
+            region: "TUR"
+
+
 
     steps:
       - name: Checkout repo
