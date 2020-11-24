@@ -35,8 +35,10 @@ jobs:
             region: "TUR"
           - model: "SM-G955F"
             region: "TUR"
-
-
+          - model: "SM-A217F"
+            region: "DBT"
+          - model: "SM-J600G"
+            region: "TGY"
 
     steps:
       - name: Checkout repo
