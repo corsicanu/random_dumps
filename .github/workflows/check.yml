@@ -13,6 +13,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - model: "SM-G977B"
+            region: "XEU"
           - model: "SM-T835"
             region: "DBT"
           - model: "SM-G975F"
