@@ -18,7 +18,7 @@ jobs:
           - model: "SM-T835"
             region: "DBT"
           - model: "SM-G975F"
-            region: "DBT"
+            region: "AUT"
           - model: "SM-G973F"
             region: "DBT"
           - model: "SM-G970F"
