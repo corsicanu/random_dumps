@@ -116,7 +116,7 @@ jobs:
           mkdir -p $releasedir
           parts=(super system vendor)
           for i in ${parts[@]}; do [[ `tar tvf ${{ steps.files.outputs.ap }} | grep $i` ]] && tar xvf ${{ steps.files.outputs.ap }} $(echo `tar tvf ${{ steps.files.outputs.ap }} | grep $i | awk -F " " '{print $NF}'`); done
-          rm -rf *.tar.md5
+          rm -rf *.tar.md5 *boot* *vbmeta*
           for i in `ls | grep lz4`; do lz4 -dm $i ; rm -rf $i; done
           for i in `ls | grep img`; do simg2img $i raw_$i ; rm -rf $i; mv raw_$i $i; done
           [[ -e super.img ]] && lpunpack --partition=vendor --partition=system super.img
