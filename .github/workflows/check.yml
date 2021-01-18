@@ -13,6 +13,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - model: "SM-A750FN"
+            region: "ROM"
           - model: "SM-G998B"
             region: "DBT"
           - model: "SM-G998N"
