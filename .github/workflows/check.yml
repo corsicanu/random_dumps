@@ -43,6 +43,8 @@ jobs:
             region: "XSG"
           - model: "SM-M305F"
             region: "INS"
+          - model: "SM-M315F"
+            region: "INS"
           - model: "SM-N950F"
             region: "KSA"
           - model: "SM-G950F"
