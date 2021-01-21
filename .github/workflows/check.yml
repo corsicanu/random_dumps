@@ -55,6 +55,8 @@ jobs:
             region: "DBT"
           - model: "SM-J600G"
             region: "TGY"
+          - model: "SM-G9980"
+            region: "CHC"
 
     steps:
       - name: Checkout repo
