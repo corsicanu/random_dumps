@@ -26,7 +26,7 @@ jobs:
           - model: "SM-G975F"
             region: "AUT"
           - model: "SM-G973F"
-            region: "DBT"
+            region: "AUT"
           - model: "SM-G970F"
             region: "DBT"
           - model: "SM-N975F"
@@ -57,10 +57,6 @@ jobs:
             region: "TGY"
           - model: "SM-G9980"
             region: "CHC"
-          - model: "SM-A326B"
-            region: "XEF"
-          - model: "SM-M127F"
-            region: "XEZ"
 
     steps:
       - name: Checkout repo
