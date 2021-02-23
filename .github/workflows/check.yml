@@ -14,7 +14,11 @@ jobs:
       matrix:
         include:
           - model: "SM-N975F"
-            region: "XSG"
+            region: "BTU"
+          - model: "SM-N976B"
+            region: "AUT"
+          - model: "SM-N976B"
+            region: "KOO"
 
     steps:
       - name: Checkout repo
