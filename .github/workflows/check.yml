@@ -17,7 +17,7 @@ jobs:
             region: "BTU"
           - model: "SM-N976B"
             region: "AUT"
-          - model: "SM-N976B"
+          - model: "SM-N976N"
             region: "KOO"
 
     steps:
