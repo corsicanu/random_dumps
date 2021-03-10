@@ -64,10 +64,13 @@ jobs:
           echo PDA version: $version_short > versions.txt
           echo Changelist: $changelist >> versions.txt
 
-      - name: Print available disk space
+      - name: Cleanup and print available disk space
         if: steps.check.outputs.need_update == 1
         run: |
-          pwd
+          sudo apt-get remove --purge -y "php*" "dotnet*" "mysql*" "nodejs*" "clang*" "google*"
+          sudo apt-get autoremove -y
+          sudo apt-get clean
+          sudo rm -rf /usr/local
           sudo df -h
           
       - name: Extract images from AP and create zip
