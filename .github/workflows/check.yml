@@ -13,8 +13,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-A102N"
-            region: "KOO"
+          - model: "SM-G398FN"
+            region: "TUR"
 
     steps:
       - name: Checkout repo
