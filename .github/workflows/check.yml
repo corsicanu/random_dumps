@@ -13,8 +13,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-A515F"
-            region: "CPA"
+          - model: "SM-A102N"
+            region: "KOO"
 
     steps:
       - name: Checkout repo
