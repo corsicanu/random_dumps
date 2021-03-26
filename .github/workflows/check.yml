@@ -13,8 +13,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-T595"
-            region: "XSG"
+          - model: "SM-N770f"
+            region: "AUT"
 
     steps:
       - name: Checkout repo
