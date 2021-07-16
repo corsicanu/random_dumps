@@ -20,7 +20,7 @@ jobs:
           - model: "SM-N981B"
             region: "DBT"
           - model: "SM-N985F"
-            region: "DBT"
+            region: "ITV"
           - model: "SM-N986B"
             region: "DBT"
 
