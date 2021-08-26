@@ -13,16 +13,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-N980F"
-            region: "DBT"
-          - model: "SM-G781B"
-            region: "BRI"
-          - model: "SM-N981B"
-            region: "DBT"
-          - model: "SM-N985F"
-            region: "TPA"
-          - model: "SM-N986B"
-            region: "DBT"
+          - model: "SM-N976B"
+            region: "AUT"
 
     steps:
       - name: Checkout repo
