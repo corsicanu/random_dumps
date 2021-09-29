@@ -15,6 +15,10 @@ jobs:
         include:
           - model: "SM-N976B"
             region: "AUT"
+          - model: "SM-G998B"
+            region: "DBT"
+          - model: "SM-G988B"
+            region: "DBT"
 
     steps:
       - name: Checkout repo
@@ -34,17 +38,36 @@ jobs:
           echo ::set-output name=latest_shortversion::$latest_short
           echo ::set-output name=need_update::$need_update
 
+      - name: Print available space
+        if: steps.check.outputs.need_update == 1
+        run: |
+          sudo df -h
+
       - name: Install dependencies
         if: steps.check.outputs.need_update == 1
         run: |
           sudo apt-get update
+          sudo apt-get remove --purge -y "php*" "dotnet*" "mysql*" "nodejs*" "clang*" "google*"
+          sudo apt-get autoremove -y
+          sudo apt-get clean
+          sudo rm -rf /usr/local
           sudo apt-get install -y liblz4-tool zip simg2img
           sudo wget -O /usr/bin/samfirm https://github.com/jesec/SamFirm.NET/releases/latest/download/linux-x64 && sudo chmod +x /usr/bin/samfirm
           sudo wget -O /usr/bin/lpunpack https://wbn.ro/lpunpack && sudo chmod +x /usr/bin/lpunpack
 
+      - name: Print available space
+        if: steps.check.outputs.need_update == 1
+        run: |
+          sudo df -h
+
       - name: Fetch firmware
         if: steps.check.outputs.need_update == 1
         run: samfirm -m ${{ matrix.model }} -r ${{ matrix.region }}
+
+      - name: Print available space
+        if: steps.check.outputs.need_update == 1
+        run: |
+          sudo df -h
 
       - name: Print directory structure
         if: steps.check.outputs.need_update == 1
@@ -64,13 +87,9 @@ jobs:
           echo PDA version: $version_short > versions.txt
           echo Changelist: $changelist >> versions.txt
 
-      - name: Cleanup and print available disk space
+      - name: Print available space
         if: steps.check.outputs.need_update == 1
         run: |
-          sudo apt-get remove --purge -y "php*" "dotnet*" "mysql*" "nodejs*" "clang*" "google*"
-          sudo apt-get autoremove -y
-          sudo apt-get clean
-          sudo rm -rf /usr/local
           sudo df -h
           
       - name: Extract images from AP and create zip
@@ -83,10 +102,14 @@ jobs:
           mkdir -p $releasedir
           parts=(super system vendor)
           for i in ${parts[@]}; do [[ `tar tvf ${{ steps.files.outputs.ap }} | grep $i` ]] && tar xvf ${{ steps.files.outputs.ap }} $(echo `tar tvf ${{ steps.files.outputs.ap }} | grep $i | awk -F " " '{print $NF}'`); done
+          sudo df -h
           rm -rf *.tar.md5 *boot* *vbmeta*
+          sudo df -h
           for i in `ls | grep lz4`; do lz4 -dm $i ; rm -rf $i; done
           for i in `ls | grep img`; do simg2img $i raw_$i ; rm -rf $i; mv raw_$i $i; done
+          sudo df -h
           [[ -e super.img ]] && lpunpack --partition=vendor --partition=system super.img && rm -rf super.img
+          sudo df -h
           [[ -e system.img.ext4 ]] && mv system.img.ext4 system.img
           [[ -e vendor.img.ext4 ]] && mv vendor.img.ext4 vendor.img
           [[ -e system.img ]] && sudo mkdir -p system && sudo mount -o loop,rw,sync system.img system && sudo find system -type l -ls | awk '{print $11" "$12" "$13}' | sort > $releasedir/symlinks_system.txt && for i in `sudo find system -not -type l`;do echo -n $(stat -c '%n %C' "$i");if [ -d "$i" ];then echo -n " dir ";else echo -n " file ";fi; echo ""; done | sort > $releasedir/metadata_system.txt && sudo find system -type d -exec sudo chmod 0755 {} \; && sudo find system -type f -exec sudo chmod 0644 {} \;
@@ -97,7 +120,13 @@ jobs:
           if [[ -d vendor ]]; then cd vendor; zip -r $releasedir/$target_version-vendor.zip *; cd $basedir; else cd system/vendor; zip -r $releasedir/$target_version-vendor.zip *; cd $basedir;fi
           cd $releasedir && zip -r $target_version-app_frame.zip *apk *jar && zip -r $target_version-txt.zip *.txt *.prop && cd $basedir
           sudo umount system && sudo umount vendor && rm -rf *img
+          sudo df -h
           echo ::set-output name=folder::$releasedir
+
+      - name: Print available space
+        if: steps.check.outputs.need_update == 1
+        run: |
+          sudo df -h
 
       - name: Update current version
         if: steps.check.outputs.need_update == 1
