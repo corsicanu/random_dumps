@@ -19,6 +19,8 @@ jobs:
             region: "DBT"
           - model: "SM-G988B"
             region: "DBT"
+          - model: "SM-G970N"
+            region: "KOO"
 
     steps:
       - name: Checkout repo
