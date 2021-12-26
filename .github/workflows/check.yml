@@ -21,6 +21,10 @@ jobs:
             region: "XSG"
           - model: "SM-G975F"
             region: "AUT"
+          - model: "SM-G955F"
+            region: "FTM"
+          - model: "SM-G950F"
+            region: "FTM"
 
     steps:
       - name: Checkout repo
