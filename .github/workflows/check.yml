@@ -15,16 +15,12 @@ jobs:
         include:
           - model: "SM-G998B"
             region: "DBT"
-          - model: "SM-G996B"
+          - model: "SM-G973F"
             region: "DBT"
-          - model: "SM-N960F"
-            region: "XSG"
           - model: "SM-G975F"
-            region: "AUT"
-          - model: "SM-G955F"
-            region: "FTM"
-          - model: "SM-G950F"
-            region: "FTM"
+            region: "DBT"
+          - model: "SM-G970F"
+            region: "DBT"
 
     steps:
       - name: Checkout repo
