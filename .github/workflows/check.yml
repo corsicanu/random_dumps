@@ -21,6 +21,14 @@ jobs:
             region: "DBT"
           - model: "SM-G970F"
             region: "DBT"
+          - model: "SM-G977B"
+            region: "AUT"
+          - model: "SM-N975F"
+            region: "AUT"
+          - model: "SM-N970F"
+            region: "AUT"
+          - model: "SM-N976B"
+            region: "AUT"
 
     steps:
       - name: Checkout repo
