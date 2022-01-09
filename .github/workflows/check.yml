@@ -25,10 +25,14 @@ jobs:
             region: "AUT"
           - model: "SM-N975F"
             region: "AUT"
+          - model: "SM-N976B"
+            region: "AUT"
           - model: "SM-N970F"
             region: "AUT"
           - model: "SM-N976B"
             region: "AUT"
+          - model: "SM-G780F"
+            region: "SER"
 
     steps:
       - name: Checkout repo
