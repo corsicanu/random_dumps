@@ -14,11 +14,11 @@ jobs:
       matrix:
         include:
           - model: "SM-G950N"
-            region: "KOO"
+            region: "SKC"
           - model: "SM-G955N"
-            region: "KOO"
+            region: "SKC"
           - model: "SM-N950N"
-            region: "KOO"
+            region: "SKC"
 
     steps:
       - name: Checkout repo
