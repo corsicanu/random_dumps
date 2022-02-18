@@ -17,10 +17,6 @@ jobs:
             region: "DBT"
           - model: "SM-T865"
             region: "DBT"
-          - model: "SM-G998B"
-            region: "EGY"
-          - model: "SM-G998B"
-            region: "ITV"
 
     steps:
       - name: Checkout repo
@@ -158,7 +154,7 @@ jobs:
         with:
           body_path: versions.txt
           tag_name: ${{ steps.check.outputs.latest_shortversion }}
-          name: "${{ matrix.model }} - ${{ steps.check.outputs.latest_shortversion }}"
+          name: "${{ steps.check.outputs.latest_shortversion }} - ${{ matrix.model }}"
           files: |
             ${{ steps.releases.outputs.folder }}/${{ steps.check.outputs.latest_shortversion }}-etc.zip
             ${{ steps.releases.outputs.folder }}/${{ steps.check.outputs.latest_shortversion }}-lib.zip
