@@ -152,7 +152,7 @@ jobs:
         with:
           body_path: versions.txt
           tag_name: ${{ steps.check.outputs.latest_shortversion }}
-          name: "${{ matrix.model }}: ${{ steps.check.outputs.latest_version }}"
+          name: "${{ matrix.model }} - ${{ steps.check.outputs.latest_shortversion }}"
           files: |
             ${{ steps.releases.outputs.folder }}/${{ steps.check.outputs.latest_shortversion }}-etc.zip
             ${{ steps.releases.outputs.folder }}/${{ steps.check.outputs.latest_shortversion }}-lib.zip
