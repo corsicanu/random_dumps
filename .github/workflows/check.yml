@@ -13,12 +13,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-G998B"
+          - model: "SM-T860"
             region: "DBT"
-          - model: "SM-T865"
-            region: "DBT"
-          - model: "SM-N976B"
-            region: "AUT"
 
     steps:
       - name: Checkout repo
@@ -156,6 +152,7 @@ jobs:
         with:
           body_path: versions.txt
           tag_name: ${{ steps.check.outputs.latest_shortversion }}
+          name: "${{ matrix.model }}: ${{ steps.check.outputs.latest_version }}"
           files: |
             ${{ steps.releases.outputs.folder }}/${{ steps.check.outputs.latest_shortversion }}-etc.zip
             ${{ steps.releases.outputs.folder }}/${{ steps.check.outputs.latest_shortversion }}-lib.zip
