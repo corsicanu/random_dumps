@@ -15,6 +15,10 @@ jobs:
         include:
           - model: "SM-G998B"
             region: "DBT"
+          - model: "SM-T865"
+            region: "DBT"
+          - model: "SM-N976B"
+            region: "AUT"
 
     steps:
       - name: Checkout repo
