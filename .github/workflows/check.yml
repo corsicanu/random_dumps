@@ -15,6 +15,12 @@ jobs:
         include:
           - model: "SM-T860"
             region: "DBT"
+          - model: "SM-T865"
+            region: "DBT"
+          - model: "SM-G998B"
+            region: "EGY"
+          - model: "SM-G998B"
+            region: "ITV"
 
     steps:
       - name: Checkout repo
