@@ -13,6 +13,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - model: "SM-A536E"
+            region: "PET"
           - model: "SM-G998B"
             region: "AFG"
           - model: "SM-T865"
