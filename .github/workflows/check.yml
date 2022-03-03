@@ -1,8 +1,9 @@
 name: Check firmware update
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: "0 */12 * * *"
   push:
 
 jobs:
@@ -13,11 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-N986B"
-            region: "DBT"
           - model: "SM-G998B"
-            region: "AFG"
-          - model: "SM-T865"
             region: "DBT"
 
     steps:
