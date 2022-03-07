@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-A750FN"
+          - model: "SM-A600FN"
             region: "ROM"
 
     steps:
