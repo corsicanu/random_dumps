@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-A600FN"
-            region: "ROM"
+          - model: "SM-A810F"
+            region: "XSG"
 
     steps:
       - name: Checkout repo
