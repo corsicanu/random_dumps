@@ -14,8 +14,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-N986B"
-            region: "AUT"
+          - model: "SM-A720S"
+            region: "SKC"
+          - model: "SM-A520F"
+            region: "DBT"
+          - model: "SM-N960F"
+            region: "MID"
+          - model: "SM-T865"
+            region: "DBT"
 
     steps:
       - name: Checkout repo
