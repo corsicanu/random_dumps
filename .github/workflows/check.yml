@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-N910C"
-            region: "XSG"
+          - model: "SCV45"
+            region: "KDI"
 
     steps:
       - name: Checkout repo
