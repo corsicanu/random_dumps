@@ -145,7 +145,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
-          body_path: versions.txt
+          body_path: version.txt
           tag_name: ${{ steps.check.outputs.latest_shortversion }}
           name: "${{ steps.check.outputs.latest_shortversion }} - ${{ matrix.model }}"
           files: |
