@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SCV45"
-            region: "KDI"
+          - model: "SM-N986B"
+            region: "AUT"
 
     steps:
       - name: Checkout repo
@@ -76,14 +76,6 @@ jobs:
         run: |
           echo ::set-output name=ap::`find -name AP*`
 
-      - name: Check downloaded firmware version
-        if: steps.check.outputs.need_update == 1
-        run: |
-          version_short=`echo ${{ steps.files.outputs.ap }} | cut -d'_' -f3`
-          changelist=`echo ${{ steps.files.outputs.ap }} | cut -d'_' -f4`
-          echo PDA version: $version_short > versions.txt
-          echo Changelist: $changelist >> versions.txt
-
       - name: Print available space
         if: steps.check.outputs.need_update == 1
         run: |
@@ -118,6 +110,8 @@ jobs:
           [[ -s system/system/build.prop ]] && cd system/system && zip -r $releasedir/$target_version-lib.zip lib* && zip -r $releasedir/$target_version-etc.zip etc && zip -r $releasedir/$target_version-cameradata.zip cameradata && cd $basedir || cd system && zip -r $releasedir/$target_version-lib.zip lib* && zip -r $releasedir/$target_version-etc.zip etc && zip -r $releasedir/$target_version-cameradata.zip cameradata && cd $basedir
           if [[ -d vendor ]]; then cd vendor; zip -r $releasedir/$target_version-vendor.zip *; cd $basedir; else cd system/vendor; zip -r $releasedir/$target_version-vendor.zip *; cd $basedir;fi
           cd $releasedir && zip -r $target_version-app_frame.zip *apk *jar && zip -r $target_version-txt.zip *.txt *.xml *.prop && cd $basedir
+          props=(ro.build.PDA= ro.build.changelist= ro.build.display.id= ro.build.id= ro.build.version.release= ro.build.version.release_or_codename= ro.build.version.security_patch= ro.system.build.fingerprint= ro.build.description= ro.build.version.base_os= ro.vendor.build.id= ro.vendor.build.security_patch= ro.vendor.build.version.release_or_codename= ro.vendor.build.fingerprint= ro.netflix.bsp_rev= ro.hardware.chipname= ro.product.board= ro.board.platform=)
+          for file in $releasedir/*.prop; do for prop in ${props[@]}; do echo $(grep $prop $file) >> version.txt; sed -i ':a;N;$!ba;s/\n\n/\n/g' version.txt; done; done
           sudo umount system && sudo umount vendor && rm -rf *img
           sudo df -h
           echo ::set-output name=folder::$releasedir
