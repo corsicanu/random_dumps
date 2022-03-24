@@ -15,7 +15,7 @@ jobs:
       matrix:
         include:
           - model: "SM-F926B"
-            region: "EUX"
+            region: "EUY"
 
     steps:
       - name: Checkout repo
