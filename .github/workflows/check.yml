@@ -14,18 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-G955N"
-            region: "KTC"
-          - model: "SM-G965N"
-            region: "KTC"
-          - model: "SM-A405FN"
-            region: "EUR"
-          - model: "SM-G955N"
-            region: "EUY"
-          - model: "SM-A530F"
-            region: "ZVV"
-          - model: "SM-A600FN"
-            region: "PRT"
+          - model: "SM-A520F"
+            region: "SKC"
 
     steps:
       - name: Checkout repo
