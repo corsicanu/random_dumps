@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-A520F"
+          - model: "SM-A720S"
             region: "SKC"
 
     steps:
