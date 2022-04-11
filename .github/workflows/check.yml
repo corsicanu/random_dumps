@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-A720S"
-            region: "SKC"
+          - model: "SM-G9750"
+            region: "CHC"
 
     steps:
       - name: Checkout repo
