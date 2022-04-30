@@ -75,6 +75,8 @@ jobs:
         id: files
         run: |
           echo ::set-output name=ap::`find -name AP*`
+          echo ::set-output name=bl::`find -name BL*`
+          echo ::set-output name=cp::`find -name CP*`
 
       - name: Print available space
         if: steps.check.outputs.need_update == 1
@@ -89,7 +91,7 @@ jobs:
           basedir=$(pwd)
           releasedir=$basedir/$target_version
           mkdir -p $releasedir
-          zip -r $releasedir/$target_version-blcp.zip BL*.tar.md5 CP*.tar.md5
+          zip -r $releasedir/$target_version-blcp.zip ${{ steps.files.outputs.bl }} ${{ steps.files.outputs.cp }}
           parts=(super system vendor)
           for i in ${parts[@]}; do [[ `tar tvf ${{ steps.files.outputs.ap }} | grep $i` ]] && tar xvf ${{ steps.files.outputs.ap }} $(echo `tar tvf ${{ steps.files.outputs.ap }} | grep $i | awk -F " " '{print $NF}'`); done
           sudo df -h
