@@ -14,8 +14,30 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-T860"
-            region: "DBT"
+          - model: "SM-N910C"
+            region: "ZTO"
+          - model: "SM-N910H"
+            region: "TPA"
+          - model: "SM-N910U"
+            region: "ARO"	
+          - model: "SM-N910S"
+            region: "SKC"
+          - model: "SM-N910L"
+            region: "LUC"
+          - model: "SM-N910K"
+            region: "KTC"
+          - model: "SM-N915S"
+            region: "SKC"
+          - model: "SM-N915L"
+            region: "LUC"
+          - model: "SM-N915K"
+            region: "KTC"
+          - model: "SM-N916S"
+            region: "SKC"
+          - model: "SM-N916L"
+            region: "LUC"
+          - model: "SM-N916K"
+            region: "KTC"
 
     steps:
       - name: Checkout repo
