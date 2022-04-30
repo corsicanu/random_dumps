@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-N975F"
-            region: "XSG"
+          - model: "SM-T860"
+            region: "DBT"
 
     steps:
       - name: Checkout repo
@@ -89,6 +89,7 @@ jobs:
           basedir=$(pwd)
           releasedir=$basedir/$target_version
           mkdir -p $releasedir
+          zip -r $releasedir/$target_version-blcp.zip BL*.tar.md5 CP*.tar.md5
           parts=(super system vendor)
           for i in ${parts[@]}; do [[ `tar tvf ${{ steps.files.outputs.ap }} | grep $i` ]] && tar xvf ${{ steps.files.outputs.ap }} $(echo `tar tvf ${{ steps.files.outputs.ap }} | grep $i | awk -F " " '{print $NF}'`); done
           sudo df -h
@@ -154,5 +155,6 @@ jobs:
             ${{ steps.releases.outputs.folder }}/${{ steps.check.outputs.latest_shortversion }}-txt.zip
             ${{ steps.releases.outputs.folder }}/${{ steps.check.outputs.latest_shortversion }}-app_frame.zip
             ${{ steps.releases.outputs.folder }}/${{ steps.check.outputs.latest_shortversion }}-cameradata.zip
+            ${{ steps.releases.outputs.folder }}/${{ steps.check.outputs.latest_shortversion }}-blcp.zip
             ${{ steps.releases.outputs.folder }}/${{ steps.check.outputs.latest_shortversion }}-vendor.zip
 
