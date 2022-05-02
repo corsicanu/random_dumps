@@ -14,9 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-G9880"
-            region: "CHC"
-          - model: "SM-N9750"
+          - model: "SM-G9980"
             region: "CHC"
 
     steps:
