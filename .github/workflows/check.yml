@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-G998B"
-            region: "ROM"
+          - model: "SM-T970"
+            region: "CHN"
 
     steps:
       - name: Checkout repo
