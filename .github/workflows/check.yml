@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-T970"
-            region: "CHN"
+          - model: "SM-T865"
+            region: "INU"
 
     steps:
       - name: Checkout repo
