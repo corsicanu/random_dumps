@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-G9980"
-            region: "CHC"
+          - model: "SM-M326B"
+            region: "INS"
 
     steps:
       - name: Checkout repo
