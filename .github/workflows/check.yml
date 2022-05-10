@@ -14,12 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-N976B"
-            region: "ROM"
-          - model: "SM-N975F"
-            region: "ROM"
-          - model: "SM-N770F"
-            region: "DBT"
+          - model: "SM-G975F"
+            region: "AUT"
 
     steps:
       - name: Checkout repo
