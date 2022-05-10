@@ -14,10 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-G991B"
-            region: "DBT"
-          - model: "SM-G996B"
-            region: "DBT"
+          - model: "SM-T875"
+            region: "TGY"
 
     steps:
       - name: Checkout repo
