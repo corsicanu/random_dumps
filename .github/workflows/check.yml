@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-T875"
-            region: "TGY"
+          - model: "SM-N986B"
+            region: "AUT"
 
     steps:
       - name: Checkout repo
