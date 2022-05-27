@@ -86,7 +86,7 @@ jobs:
           for i in `ls | grep img`; do simg2img $i raw_$i ; rm -rf $i; mv raw_$i $i; done
           [[ -e optics.img.ext4 ]] && mv optics.img.ext4 optics.img
           [[ -e product.img.ext4 ]] && mv product.img.ext4 product.img
-          if [[ -e optics.img ]]; then sudo mkdir -p optics; sudo mount -o loop,rw,sync optics.img optics; sudo cp -r optics/* csc; sudo umount optics; elif [[ -e product.img ]]; then sudo mkdir -p product; sudo mount -o loop,rw,sync product.img product; sudo cp -r product/* csc;  sudo umount product; fi
+          if [[ -e optics.img ]]; then sudo mkdir -p optics; sudo mount -o loop,rw,sync optics.img optics; sudo cp -r optics/* csc; sudo umount optics; elif [[ -e product.img ]]; then sudo mkdir -p product; sudo mount -o loop,rw,sync product.img product; sudo cp -r product/* csc;  sudo umount product; else sudo cp ${{ steps.files.outputs.csc }} csc/${{ steps.files.outputs.csc }}; fi
           sudo find csc -type d -exec chmod 755 {} \; 
           sudo find csc -type f -exec chmod 644 {} \; 
           sudo rm -rf csc/HWRDB csc/sipdb `find csc -type f -name *apk`; 
