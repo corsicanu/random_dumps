@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-G965F"
-            region: "DBT"
+          - model: "SM-F711N"
+            region: "KOO"
 
     steps:
       - name: Checkout repo
