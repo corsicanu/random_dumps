@@ -15,7 +15,7 @@ jobs:
       matrix:
         include:
           - model: "SM-A135F"
-            region: "ROM"
+            region: "EUX"
 
     steps:
       - name: Checkout repo
