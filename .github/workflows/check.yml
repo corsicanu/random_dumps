@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-A135F"
-            region: "EUX"
+          - model: "SM-G998B"
+            region: "DBT"
 
     steps:
       - name: Checkout repo
