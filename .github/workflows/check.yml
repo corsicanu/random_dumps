@@ -96,7 +96,7 @@ jobs:
           parts=(boot recovery)
           for i in ${parts[@]}; do [[ `tar tvf ${{ steps.files.outputs.ap }} | grep $i` ]] && tar xvf ${{ steps.files.outputs.ap }} $(echo `tar tvf ${{ steps.files.outputs.ap }} | grep $i | awk -F " " '{print $NF}'`); done
           for i in `ls | grep lz4`; do lz4 -dm $i ; rm -rf $i; done
-          [[ -e boot.img ]] && extract-ikconfig boot.img > $releasedir/$target_version-boot.img_defconfig;
+          extract-ikconfig boot.img > $releasedir/$target_version-boot.img_defconfig || echo "# Dummy file to keep workflow alive" > $releasedir/$target_version-boot.img_defconfig;
           zip -r $releasedir/$target_version-bootrecovery.zip *.img
           rm -rf *.img
           parts=(super system vendor)
