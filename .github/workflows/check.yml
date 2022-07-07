@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-A207F"
-            region: "EGY"
+          - model: "SM-F926B"
+            region: "EUX"
 
     steps:
       - name: Checkout repo
