@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-F926B"
-            region: "EUX"
+          - model: "SM-N970F"
+            region: "ZTO"
 
     steps:
       - name: Checkout repo
