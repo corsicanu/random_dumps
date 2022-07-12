@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-N970F"
-            region: "ZTO"
+          - model: "SM-T865"
+            region: "DBT"
 
     steps:
       - name: Checkout repo
