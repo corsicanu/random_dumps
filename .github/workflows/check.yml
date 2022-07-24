@@ -14,8 +14,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-G990E"
-            region: "XSG"
+          - model: "SM-N960N"
+            region: "KOO"
+          - model: "SM-G960N"
+            region: "KOO"
+          - model: "SM-G965N"
+            region: "KOO"
 
     steps:
       - name: Checkout repo
