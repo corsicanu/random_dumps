@@ -16,6 +16,8 @@ jobs:
         include:
           - model: "SM-T865"
             region: "DBT"
+          - model: "SM-N975F"
+            region: "AUT"
 
     steps:
       - name: Checkout repo
