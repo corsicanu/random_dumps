@@ -14,8 +14,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-G977N"
-            region: "KOO"
+          - model: "SM-M625F"
+            region: "NPL"
+          - model: "SM-E625F"
+            region: "INS"
 
     steps:
       - name: Checkout repo
