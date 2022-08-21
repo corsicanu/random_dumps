@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-G970F"
-            region: "XEO"
+          - model: "SM-N950F"
+            region: "DBT"
 
     steps:
       - name: Checkout repo
