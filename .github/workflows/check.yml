@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-A135F"
-            region: "EUX"
+          - model: "SM-T875"
+            region: "AUT"
 
     steps:
       - name: Checkout repo
@@ -48,15 +48,11 @@ jobs:
           sudo apt-get autoremove -y
           sudo apt-get clean
           sudo rm -rf /usr/local
-          sudo apt-get install -y liblz4-tool zip simg2img uuid-dev autoconf libtool libselinux1-dev
+          sudo apt-get install -y liblz4-tool zip simg2img
           sudo wget -O /usr/bin/samfirm https://github.com/jesec/SamFirm.NET/releases/latest/download/linux-x64 && sudo chmod +x /usr/bin/samfirm
           sudo wget -O /usr/bin/lpunpack https://corsica.nu/lpunpack && sudo chmod +x /usr/bin/lpunpack
           sudo wget -O /usr/bin/extract-ikconfig https://corsica.nu/extract-ikconfig && sudo chmod +x /usr/bin/extract-ikconfig
           sudo wget -O /usr/bin/omc-decoder.jar http://corsica.nu/omc-decoder.jar && sudo chmod +x /usr/bin/omc-decoder.jar
-          curr_dir=$(pwd)
-          git clone -b dev git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs-tools.git f2fs
-          cd f2fs && ./autogen.sh && ./configure && sudo make && sudo make install
-          cd $curr_dir
           
 
       - name: Fetch firmware
