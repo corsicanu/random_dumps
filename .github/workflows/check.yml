@@ -14,12 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-G9750"
-            region: "CHC"
-          - model: "SM-G9860"
-            region: "CHC"
-          - model: "SM-F7000"
-            region: "CHC"
+          - model: "SM-G988B"
+            region: "DBT"
 
     steps:
       - name: Checkout repo
