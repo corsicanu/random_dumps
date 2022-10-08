@@ -14,10 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-N770F"
-            region: "DBT"
-          - model: "SM-N960F"
-            region: "DBT"
+          - model: "SM-A908B"
+            region: "BTU"
 
     steps:
       - name: Checkout repo
