@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-A908B"
-            region: "BTU"
+          - model: "SM-T865"
+            region: "DBT"
 
     steps:
       - name: Checkout repo
