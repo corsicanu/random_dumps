@@ -8,14 +8,14 @@ on:
 
 jobs:
   update:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-T865"
-            region: "DBT"
+          - model: "SM-G975F"
+            region: "AUT"
 
     steps:
       - name: Checkout repo
