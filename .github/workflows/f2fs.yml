@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: true
 
@@ -31,17 +31,17 @@ jobs:
           latest_short=`echo $latest | cut -d'/' -f1`
           current=`cat current.${{ matrix.model }}_${{ matrix.region }}` || need_update=1
           [[ $latest != $current ]] && need_update=1
-          echo ::set-output name=latest_version::$latest
-          echo ::set-output name=latest_shortversion::$latest_short
-          echo ::set-output name=need_update::$need_update
+          echo "latest_version=$latest" >> $GITHUB_ENV
+          echo "latest_shortversion=$latest_short" >> $GITHUB_ENV
+          echo "need_update=$need_update" >> $GITHUB_ENV
 
       - name: Print available space
-        if: steps.check.outputs.need_update == 1
+        if: env.need_update == 1
         run: |
           sudo df -h
 
       - name: Install dependencies
-        if: steps.check.outputs.need_update == 1
+        if: env.need_update == 1
         run: |
           sudo apt-get update
           sudo apt-get remove --purge -y "php*" "dotnet*" "mysql*" "nodejs*" "clang*" "google*"
@@ -56,38 +56,38 @@ jobs:
           
 
       - name: Fetch firmware
-        if: steps.check.outputs.need_update == 1
+        if: env.need_update == 1
         run: samfirm -m ${{ matrix.model }} -r ${{ matrix.region }}
 
       - name: Print directory structure
-        if: steps.check.outputs.need_update == 1
+        if: env.need_update == 1
         run: ls -la ${{ matrix.model }}_${{ matrix.region }}
 
       - name: Get path of files
-        if: steps.check.outputs.need_update == 1
+        if: env.need_update == 1
         id: files
         run: |
-          echo ::set-output name=ap::`find -name AP*`
-          echo ::set-output name=bl::`find -name BL*`
-          echo ::set-output name=cp::`find -name CP*`
-          echo ::set-output name=csc::`find -name CSC*`
+          echo "ap=`find -name AP*`" >> $GITHUB_ENV
+          echo "bl=`find -name BL*`" >> $GITHUB_ENV
+          echo "cp=`find -name CP*`" >> $GITHUB_ENV
+          echo "csc=`find -name CSC*`" >> $GITHUB_ENV
           
       - name: Extract images from AP and create zip
-        if: steps.check.outputs.need_update == 1
+        if: env.need_update == 1
         id: releases
         run: |
-          target_version=${{ steps.check.outputs.latest_shortversion }}
+          target_version=${{ env.latest_shortversion }}
           basedir=$(pwd)
           releasedir=$basedir/$target_version
           mkdir -p $releasedir csc
-          zip -r $releasedir/$target_version-blcp.zip ${{ steps.files.outputs.bl }} ${{ steps.files.outputs.cp }}
+          zip -r $releasedir/$target_version-blcp.zip ${{ env.bl }} ${{ env.cp }}
           parts=(optics product)
-          for i in ${parts[@]}; do [[ `tar tvf ${{ steps.files.outputs.csc }} | grep $i` ]] && tar xvf ${{ steps.files.outputs.csc }} $(echo `tar tvf ${{ steps.files.outputs.csc }} | grep $i | awk -F " " '{print $NF}'`); done
+          for i in ${parts[@]}; do [[ `tar tvf ${{ env.csc }} | grep $i` ]] && tar xvf ${{ env.csc }} $(echo `tar tvf ${{ env.csc }} | grep $i | awk -F " " '{print $NF}'`); done
           for i in `ls | grep lz4`; do lz4 -dm $i ; rm -rf $i; done
           for i in `ls | grep img`; do simg2img $i raw_$i ; rm -rf $i; mv raw_$i $i; done
           [[ -e optics.img.ext4 ]] && mv optics.img.ext4 optics.img
           [[ -e product.img.ext4 ]] && mv product.img.ext4 product.img
-          if [[ -e optics.img ]]; then sudo mkdir -p optics; sudo mount -o loop,rw,sync optics.img optics; sudo cp -r optics/* csc; sudo umount optics; elif [[ -e product.img ]]; then sudo mkdir -p product; sudo mount -o loop,rw,sync product.img product; sudo cp -r product/* csc;  sudo umount product; else sudo cp ${{ steps.files.outputs.csc }} csc; fi
+          if [[ -e optics.img ]]; then sudo mkdir -p optics; sudo mount -o loop,rw,sync optics.img optics; sudo cp -r optics/* csc; sudo umount optics; elif [[ -e product.img ]]; then sudo mkdir -p product; sudo mount -o loop,rw,sync product.img product; sudo cp -r product/* csc;  sudo umount product; else sudo cp ${{ env.csc }} csc; fi
           sudo find csc -type d -exec chmod 755 {} \; 
           sudo find csc -type f -exec chmod 644 {} \; 
           sudo rm -rf csc/HWRDB csc/sipdb `find csc -type f -name *apk`; 
@@ -95,64 +95,64 @@ jobs:
           zip -r $releasedir/$target_version-csc.zip csc/*; 
           sudo rm -rf *.img csc
           parts=(boot recovery)
-          for i in ${parts[@]}; do [[ `tar tvf ${{ steps.files.outputs.ap }} | grep $i` ]] && tar xvf ${{ steps.files.outputs.ap }} $(echo `tar tvf ${{ steps.files.outputs.ap }} | grep $i | awk -F " " '{print $NF}'`); done
+          for i in ${parts[@]}; do [[ `tar tvf ${{ env.ap }} | grep $i` ]] && tar xvf ${{ env.ap }} $(echo `tar tvf ${{ env.ap }} | grep $i | awk -F " " '{print $NF}'`); done
           for i in `ls | grep lz4`; do lz4 -dm $i ; rm -rf $i; done
           extract-ikconfig boot.img > $releasedir/$target_version-boot.img_defconfig || echo "# Dummy file to keep workflow alive" > $releasedir/$target_version-boot.img_defconfig;
           extract-ikconfig recovery.img > $releasedir/$target_version-recovery.img_defconfig || echo "# Dummy file to keep workflow alive" > $releasedir/$target_version-recovery.img_defconfig;
           zip -r $releasedir/$target_version-bootrecovery.zip *.img
           rm -rf *.img
           mkdir -p fota && echo "# Dummy file to keep workflow alive" > $releasedir/$target_version-dummy;
-          tar xvf ${{ steps.files.outputs.ap }} meta-data/fota.zip --strip-components=1
+          tar xvf ${{ env.ap }} meta-data/fota.zip --strip-components=1
           [[ -e fota.zip ]] && unzip -P fotatest1234 fota.zip -d fota && rm -rf fota/OTA fota/BOOT/kernel fota/RECOVERY/kernel
           zip -r $releasedir/$target_version-fota.zip fota
           props=(ro.build.PDA= ro.build.changelist= ro.build.display.id= ro.build.id= ro.build.version.release= ro.build.version.release_or_codename= ro.build.version.security_patch= ro.build.version.sdk= ro.system.build.fingerprint= ro.build.description= ro.build.version.base_os= ro.vendor.build.id= ro.vendor.build.security_patch= ro.vendor.build.version.release_or_codename= ro.vendor.build.fingerprint= ro.netflix.bsp_rev= ro.hardware.chipname= ro.product.board= ro.board.platform= ro.security.keystore.keytype= ro.build.characteristics=)          
           for file in `find fota -type f -name *prop`; do for prop in ${props[@]}; do echo $(grep $prop $file) >> version.txt; sed -i ':a;N;$!ba;s/\n\n/\n/g' version.txt; done; done
           parts=(super system vendor)
-          for i in ${parts[@]}; do [[ `tar tvf ${{ steps.files.outputs.ap }} | grep $i` ]] && tar xvf ${{ steps.files.outputs.ap }} $(echo `tar tvf ${{ steps.files.outputs.ap }} | grep $i | awk -F " " '{print $NF}'`); done
+          for i in ${parts[@]}; do [[ `tar tvf ${{ env.ap }} | grep $i` ]] && tar xvf ${{ env.ap }} $(echo `tar tvf ${{ env.ap }} | grep $i | awk -F " " '{print $NF}'`); done
           rm -rf *.tar.md5 *boot* *vbmeta*
           for i in `ls | grep lz4`; do lz4 -dm $i ; rm -rf $i; done
           for i in `ls | grep img`; do simg2img $i raw_$i ; rm -rf $i; mv raw_$i $i; done
           [[ -e super.img ]] && lpunpack --partition=vendor --partition=system super.img && rm -rf super.img
           [[ -e vendor.img.ext4 ]] && mv vendor.img.ext4 vendor.img
           if [[ -e vendor.img ]]; then zip -r $releasedir/$target_version-vendor.zip vendor.img; cd $basedir; fi
-          echo ::set-output name=folder::$releasedir
+          echo "folder=$releasedir" >> $GITHUB_ENV
 
       - name: Generate commit tag
         id: tag
         run: |
           name=$(date +'%Y%m%d%H%M%S')
-          echo ::set-output name=name::$name
+          echo "name=$name" >> $GITHUB_ENV
 
       - name: Update current version
-        if: steps.check.outputs.need_update == 1
+        if: env.need_update == 1
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git pull origin ${{github.ref}} --ff-only
-          echo ${{ steps.check.outputs.latest_version }} > current.${{ matrix.model }}_${{ matrix.region }}
+          echo ${{ env.latest_version }} > current.${{ matrix.model }}_${{ matrix.region }}
           git add current.${{ matrix.model }}_${{ matrix.region }}
-          git commit -m "${{ matrix.model }}: ${{ steps.check.outputs.latest_version }}"
-          git tag ${{ steps.tag.outputs.name }}
+          git commit -m "${{ matrix.model }}: ${{ env.latest_version }}"
+          git tag ${{ env.name }}
 
       - name: Push changes to repo
-        if: steps.check.outputs.need_update == 1
+        if: env.need_update == 1
         uses: ad-m/github-push-action@master
         with:
           tags: true
           github_token: ${{ secrets.TOKEN }}
 
       - name: Upload release assets
-        if: steps.check.outputs.need_update == 1
+        if: env.need_update == 1
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           body_path: version.txt
-          tag_name: ${{ steps.tag.outputs.name }}
-          name: "${{ steps.check.outputs.latest_shortversion }} - ${{ matrix.model }} - ${{ matrix.region }}"
+          tag_name: ${{ env.name }}
+          name: "${{ env.latest_shortversion }} - ${{ matrix.model }} - ${{ matrix.region }}"
           files: |
-            ${{ steps.releases.outputs.folder }}/${{ steps.check.outputs.latest_shortversion }}-blcp.zip
-            ${{ steps.releases.outputs.folder }}/${{ steps.check.outputs.latest_shortversion }}-vendor.zip
-            ${{ steps.releases.outputs.folder }}/${{ steps.check.outputs.latest_shortversion }}-bootrecovery.zip
-            ${{ steps.releases.outputs.folder }}/${{ steps.check.outputs.latest_shortversion }}-fota.zip
-            ${{ steps.releases.outputs.folder }}/${{ steps.check.outputs.latest_shortversion }}-csc.zip
+            ${{ env.folder }}/${{ env.latest_shortversion }}-blcp.zip
+            ${{ env.folder }}/${{ env.latest_shortversion }}-vendor.zip
+            ${{ env.folder }}/${{ env.latest_shortversion }}-bootrecovery.zip
+            ${{ env.folder }}/${{ env.latest_shortversion }}-fota.zip
+            ${{ env.folder }}/${{ env.latest_shortversion }}-csc.zip
