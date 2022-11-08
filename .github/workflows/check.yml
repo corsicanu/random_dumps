@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-M515F"
-            region: "KSA"
+          - model: "SM-G975F"
+            region: "BOG"
 
     steps:
       - name: Checkout repo
