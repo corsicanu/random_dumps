@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-G991B"
-            region: "AUT"
+          - model: "SM-N770F"
+            region: "XEF"
 
     steps:
       - name: Checkout repo
