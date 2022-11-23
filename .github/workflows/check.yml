@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-E625F"
-            region: "INS"
+          - model: "SM-T865"
+            region: "DBT"
 
     steps:
       - name: Checkout repo
