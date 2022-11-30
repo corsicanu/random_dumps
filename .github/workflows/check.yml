@@ -15,17 +15,11 @@ jobs:
       matrix:
         include:
           - model: "SM-G960F"
-            region: "DBT"
+            region: "XSG"
           - model: "SM-G965F"
-            region: "DBT"
+            region: "XSG"
           - model: "SM-N960F"
-            region: "DBT"
-          - model: "SM-G960N"
-            region: "KTC"
-          - model: "SM-G965N"
-            region: "KTC"
-          - model: "SM-N960N"
-            region: "KTC"
+            region: "XSG"
 
     steps:
       - name: Checkout repo
