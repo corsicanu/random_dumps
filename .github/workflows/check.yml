@@ -14,12 +14,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-G960F"
-            region: "XSG"
-          - model: "SM-G965F"
-            region: "XSG"
-          - model: "SM-N960F"
-            region: "XSG"
+          - model: "SM-G970F"
+            region: "DBT"
+          - model: "SM-G973F"
+            region: "DBT"
+          - model: "SM-G975F"
+            region: "DBT"
 
     steps:
       - name: Checkout repo
