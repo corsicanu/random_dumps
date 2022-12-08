@@ -14,11 +14,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-G970F"
+          - model: "SM-N970F"
             region: "DBT"
-          - model: "SM-G973F"
+          - model: "SM-N975F"
             region: "DBT"
-          - model: "SM-G975F"
+          - model: "SM-N976B"
             region: "DBT"
 
     steps:
