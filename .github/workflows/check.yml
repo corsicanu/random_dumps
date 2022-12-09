@@ -14,12 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-N970F"
-            region: "BTU"
-          - model: "SM-N975F"
-            region: "BTU"
-          - model: "SM-N976B"
-            region: "BTU"
+          - model: "SM-G998N"
+            region: "KOO"
 
     steps:
       - name: Checkout repo
