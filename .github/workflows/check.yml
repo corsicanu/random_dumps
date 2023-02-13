@@ -16,8 +16,8 @@ jobs:
         include:
           - model: "SM-G970F"
             region: "AUT"
-          - model: "SM-G970F"
-            region: "DBT"
+          - model: "SM-G981B"
+            region: "AUT"
 
     steps:
       - name: Checkout repo
