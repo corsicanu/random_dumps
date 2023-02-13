@@ -16,7 +16,7 @@ jobs:
         include:
           - model: "SM-S908B"
             region: "EUX"
-          - model: "SM-S918B"
+          - model: "SM-G990B"
             region: "EUX"
 
     steps:
