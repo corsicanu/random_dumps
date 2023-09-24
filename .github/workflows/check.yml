@@ -16,6 +16,8 @@ jobs:
         include:
           - model: "SM-T976B"
             region: "AUT"
+          - model: "SM-T875"
+            region: "AUT"
 
     steps:
       - name: Checkout repo
