@@ -51,7 +51,7 @@ jobs:
           sudo apt-get clean
           sudo rm -rf /usr/local
           sudo apt-get install -y liblz4-tool zip simg2img
-          sudo wget -O /usr/bin/samfirm https://github.com/jesec/SamFirm.NET/releases/latest/download/linux-x64 && sudo chmod +x /usr/bin/samfirm
+          sudo wget -O /usr/bin/samfirm https://github.com/ananjaser1211/SamFirm.NET/releases/latest/download/linux-x64 && sudo chmod +x /usr/bin/samfirm
           sudo wget -O /usr/bin/lpunpack https://corsica.nu/lpunpack && sudo chmod +x /usr/bin/lpunpack
           sudo wget -O /usr/bin/extract-ikconfig https://corsica.nu/extract-ikconfig && sudo chmod +x /usr/bin/extract-ikconfig
           sudo wget -O /usr/bin/omc-decoder.jar http://corsica.nu/omc-decoder.jar && sudo chmod +x /usr/bin/omc-decoder.jar
