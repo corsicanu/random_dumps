@@ -14,10 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-T976B"
-            region: "AUT"
-          - model: "SM-T875"
-            region: "AUT"
+          - model: "SM-N920C"
+            region: "CAM"
 
     steps:
       - name: Checkout repo
