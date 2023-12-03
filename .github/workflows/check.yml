@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-N920C"
-            region: "CAM"
+          - model: "SM-A515F"
+            region: "XSA"
 
     steps:
       - name: Checkout repo
