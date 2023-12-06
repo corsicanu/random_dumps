@@ -14,12 +14,16 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-A515F"
-            region: "XSA"
+          - model: "SM-G970F"
+            region: "TCE"
+          - model: "SM-G973F"
+            region: "TCE"
+          - model: "SM-G975F"
+            region: "TCE"
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@master
         with:
           submodules: true
 
