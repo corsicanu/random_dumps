@@ -14,12 +14,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-G970F"
-            region: "TCE"
-          - model: "SM-G973F"
-            region: "TCE"
-          - model: "SM-G975F"
-            region: "TCE"
+          - model: "SM-N985F"
+            region: "XSG"
+            imei: "352682501234560"
 
     steps:
       - name: Checkout repo
@@ -61,7 +58,7 @@ jobs:
 
       - name: Fetch firmware
         if: env.need_update == 1
-        run: samfirm -m ${{ matrix.model }} -r ${{ matrix.region }}
+        run: samfirm -m ${{ matrix.model }} -r ${{ matrix.region }} -i ${{ matrix.imei }}
 
       - name: Print directory structure
         if: env.need_update == 1
