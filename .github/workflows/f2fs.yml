@@ -16,6 +16,7 @@ jobs:
         include:
           - model: "SM-X906B"
             region: "EUX"
+            imei: "352125580421096"
 
     steps:
       - name: Checkout repo
@@ -57,7 +58,7 @@ jobs:
 
       - name: Fetch firmware
         if: env.need_update == 1
-        run: samfirm -m ${{ matrix.model }} -r ${{ matrix.region }}
+        run: samfirm -m ${{ matrix.model }} -r ${{ matrix.region }} -i ${{ matrix.imei }}
 
       - name: Print directory structure
         if: env.need_update == 1
