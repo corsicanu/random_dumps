@@ -1,14 +1,14 @@
-name: F2FS fw files dumper
+name: F2FS Firmware dumper
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 10/12 * * *"
+    - cron: "15 */12 * * *"
   push:
 
 jobs:
   update:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@master
         with:
           submodules: true
 
@@ -30,7 +30,7 @@ jobs:
           need_update=0
           latest=`curl --retry 5 --retry-delay 5 http://fota-cloud-dn.ospserver.net/firmware/${{ matrix.region }}/${{ matrix.model }}/version.xml | grep latest | sed 's/^[^>]*>//' | sed 's/<.*//'`
           latest_short=`echo $latest | cut -d'/' -f1`
-          current=`cat current.${{ matrix.model }}_${{ matrix.region }}` || need_update=1
+          current=`cat index/${{ matrix.model }}.${{ matrix.region }}` || need_update=1
           [[ $latest != $current ]] && need_update=1
           echo "latest_version=$latest" >> $GITHUB_ENV
           echo "latest_shortversion=$latest_short" >> $GITHUB_ENV
@@ -106,7 +106,7 @@ jobs:
           tar xvf ${{ env.ap }} meta-data/fota.zip --strip-components=1
           [[ -e fota.zip ]] && unzip -P fotatest1234 fota.zip -d fota && rm -rf fota/OTA fota/BOOT/kernel fota/RECOVERY/kernel
           zip -r $releasedir/$target_version-fota.zip fota
-          props=(ro.build.PDA= ro.build.changelist= ro.build.display.id= ro.build.id= ro.build.version.release= ro.build.version.release_or_codename= ro.build.version.security_patch= ro.build.version.sdk= ro.system.build.fingerprint= ro.build.description= ro.build.version.base_os= ro.vendor.build.id= ro.vendor.build.security_patch= ro.vendor.build.version.release_or_codename= ro.vendor.build.fingerprint= ro.netflix.bsp_rev= ro.hardware.chipname= ro.product.board= ro.board.platform= ro.security.keystore.keytype= ro.build.characteristics=)          
+          props=(ro.build.PDA= ro.build.changelist= ro.build.display.id= ro.build.id= ro.build.version.release= ro.build.version.release_or_codename= ro.build.version.security_patch= ro.build.version.sdk= ro.system.build.fingerprint= ro.build.description= ro.build.version.base_os= ro.vendor.build.id= ro.vendor.build.security_patch= ro.vendor.build.fingerprint= ro.vendor.build.version.release_or_codename= ro.vendor.build.version.sdk= ro.vndk.version= ro.hardware.chipname= ro.product.board= ro.board.platform= ro.security.keystore.keytype= ro.boot.dynamic_partitions= ro.product.first_api_level= ro.build.characteristics= ro.netflix.bsp_rev=)     
           for file in `find fota -type f -name *prop`; do for prop in ${props[@]}; do echo $(grep $prop $file) >> version.txt; sed -i ':a;N;$!ba;s/\n\n/\n/g' version.txt; done; done
           parts=(super system vendor)
           for i in ${parts[@]}; do [[ `tar tvf ${{ env.ap }} | grep $i` ]] && tar xvf ${{ env.ap }} $(echo `tar tvf ${{ env.ap }} | grep $i | awk -F " " '{print $NF}'`); done
@@ -130,9 +130,9 @@ jobs:
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git pull origin ${{github.ref}} --ff-only
-          echo ${{ env.latest_version }} > current.${{ matrix.model }}_${{ matrix.region }}
-          git add current.${{ matrix.model }}_${{ matrix.region }}
-          git commit -m "${{ matrix.model }}: ${{ env.latest_version }}"
+          echo ${{ env.latest_version }} > index/${{ matrix.model }}.${{ matrix.region }}
+          git add index/${{ matrix.model }}.${{ matrix.region }}
+          git commit -m "${{ matrix.model }}/${{ matrix.region }}: ${{ env.latest_version }}"
           git tag ${{ env.name }}
 
       - name: Push changes to repo
@@ -144,7 +144,7 @@ jobs:
 
       - name: Upload release assets
         if: env.need_update == 1
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@master
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
@@ -157,3 +157,4 @@ jobs:
             ${{ env.folder }}/${{ env.latest_shortversion }}-bootrecovery.zip
             ${{ env.folder }}/${{ env.latest_shortversion }}-fota.zip
             ${{ env.folder }}/${{ env.latest_shortversion }}-csc.zip
+
