@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-N985F"
+          - model: "SM-N975F"
             region: "ILO"
             imei: "352682501234560"
 
