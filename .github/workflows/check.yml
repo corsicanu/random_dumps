@@ -12,7 +12,7 @@ jobs:
       matrix:
         include:
           - model: "SM-N985F"
-            region: "XSG"
+            region: "ILO"
             imei: "352682501234560"
 
     steps:
