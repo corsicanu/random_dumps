@@ -13,7 +13,7 @@ jobs:
         include:
           - model: "SM-N975F"
             region: "ILO"
-            imei: "352682501234560"
+            imei: "351591116941850"
 
     steps:
       - name: Checkout repo
