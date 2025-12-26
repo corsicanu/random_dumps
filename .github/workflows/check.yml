@@ -11,9 +11,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - model: "SM-N975F"
+          - model: "SM-A715F"
             region: "ILO"
-            imei: "351591116941850"
+            imei: "350000024444578"
 
     steps:
       - name: Checkout repo
